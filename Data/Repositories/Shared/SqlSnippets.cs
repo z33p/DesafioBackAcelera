@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DesafioBack.Repositories.Shared
+namespace DesafioBack.Data.Repositories.Shared
 {
     public class SqlSnippets
     {

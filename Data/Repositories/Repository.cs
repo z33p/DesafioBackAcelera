@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
-using DesafioBack.Database;
+using DesafioBack.Data.Repositories.Shared;
 using DesafioBack.Models.Shared;
-using DesafioBack.Repositories.Shared;
 
-namespace DesafioBack.Repositories
+namespace DesafioBack.Data.Repositories
 {
     public class Repository
     {

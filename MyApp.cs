@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using DesafioBack.Database;
+using DesafioBack.Data;
 using DesafioBack.Services;
 
 namespace DesafioBack

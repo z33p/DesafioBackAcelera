@@ -3,14 +3,14 @@ using System.Data.SQLite;
 using System.Threading.Tasks;
 using DesafioBack.Models.Tables;
 
-namespace DesafioBack.Database
+namespace DesafioBack.Data
 {
     public class MyDatabase
     {
         private static MyDatabase _instance = new MyDatabase();
         public static MyDatabase Instance { get => _instance; } 
 
-        public const string SqliteConnectionString = "Data Source=Database/data.db";
+        public const string SqliteConnectionString = "Data Source=Data/database.db";
         
         public async Task InitDatabase()
         {

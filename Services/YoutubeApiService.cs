@@ -5,18 +5,18 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using DesafioBack.Contracts;
-using DesafioBack.Contracts.Responses;
-using DesafioBack.Contracts.Responses.Shared;
+using DesafioBack.Contracts.Responses.Youtube;
+using DesafioBack.Contracts.Responses.Youtube.Shared;
+using DesafioBack.Data.Repositories.shared;
 using DesafioBack.Services.Shared;
 
 namespace DesafioBack.Services
 {
     public class YoutubeApiService : ServiceAbstract
     {
-        private static YoutubeApiService _instance = new YoutubeApiService();
-        public static YoutubeApiService Instance { get => _instance; }
-
         public readonly HttpClient client = new HttpClient();
+
+        public YoutubeApiService(IRepository repository) : base(repository) {}
 
         public async Task SeedDatabase()
         {
@@ -32,7 +32,7 @@ namespace DesafioBack.Services
 
             var videos = GetUrlVideosContentResponse.toEntity(youtubeResponse.Items);
 
-            await Repository.Insert(videos);
+            await repository.Insert(videos);
         }
 
         private async Task<List<string>> GetYoutubeVideosIds()

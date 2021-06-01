@@ -1,10 +1,15 @@
 
-using DesafioBack.Data.Repositories;
+using DesafioBack.Data.Repositories.shared;
 
 namespace DesafioBack.Services.Shared
 {
     abstract public class ServiceAbstract
     {
-        public readonly Repository Repository = new Repository();
+        public readonly IRepository repository;
+
+        public ServiceAbstract(IRepository repository)
+        {
+            this.repository = repository;
+        }
     }
 }

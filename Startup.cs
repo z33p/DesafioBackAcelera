@@ -1,5 +1,9 @@
 using DesafioBack;
 using DesafioBack.Contracts;
+using DesafioBack.Data.Repositories;
+using DesafioBack.Data.Repositories.shared;
+using DesafioBack.Services;
+using DesafioBack.Services.Videos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +30,9 @@ namespace DesafioBackAcelera
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DesafioBackAcelera", Version = "v1" });
             });
+
+            services.AddSingleton<IRepository, Repository>();
+            services.AddSingleton<IVideosService, VideosService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

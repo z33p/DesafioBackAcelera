@@ -11,7 +11,9 @@ namespace DesafioBack.Models.Shared
         Task CreateTable(SQLiteConnection connection);
 
         Dictionary<string, dynamic> EntityMapToDatabase(E entity);
-
         List<Dictionary<string, dynamic>> EntityMapToDatabase(List<E> entities);
+
+        E EntityMapFromDatabase(Dictionary<string, dynamic> dict);
+        List<E> EntityMapFromDatabase(List<Dictionary<string, dynamic>> dictList);
     }
 }

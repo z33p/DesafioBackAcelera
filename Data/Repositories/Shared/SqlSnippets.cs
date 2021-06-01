@@ -35,5 +35,44 @@ namespace DesafioBack.Data.Repositories.Shared
 
             return $"'{value}'";
         }
+
+        public string WheresSql(List<string> sqlWheresList) {
+            var sqlWheres = "";
+
+            sqlWheresList = sqlWheresList.Where(where => !string.IsNullOrEmpty(where)).ToList();
+
+            if (sqlWheresList.Any((where) => where != null))
+            sqlWheres = "WHERE " + string.Join(" AND ", sqlWheresList);
+
+            return sqlWheres;
+        }
+
+        public string ColumnsSql(List<string> columns)
+        {
+            if (columns != null && columns.Any())
+                return string.Join(",", columns);
+
+            return "*";
+        }
+
+        public string WhereColumnEquals(String columnName, dynamic value)
+        {
+            var where = $"{columnName} = {AddQuotesIfNotNumeric(value)}";
+
+            return where;
+        }
+
+        public string OrderBySql(string orderByColumn, int? limit = null, int? offset = null) {
+            var orderBy = "";
+
+            if (!string.IsNullOrWhiteSpace(orderByColumn))
+                orderBy = $"ORDER BY {orderByColumn}";
+
+            if (limit != null) orderBy += " LIMIT $limit";
+
+            if (offset != null) orderBy += " OFFSET $offset";
+
+            return orderBy;
+        }
     }
 }

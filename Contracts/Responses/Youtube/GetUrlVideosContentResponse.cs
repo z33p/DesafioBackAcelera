@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
-using DesafioBack.Contracts.Responses.Shared;
+using DesafioBack.Contracts.Responses.Youtube.Shared;
 using DesafioBack.Models;
+using DesafioBack.Services;
 
-namespace DesafioBack.Contracts.Responses
+namespace DesafioBack.Contracts.Responses.Youtube
 {
     public class GetUrlVideosContentResponse
     {
@@ -18,7 +17,7 @@ namespace DesafioBack.Contracts.Responses
             VideoId = this.Id
             , Title = this.Snippet.Title
             , Author = this.Snippet.ChannelTitle
-            , Duration = (int) Math.Ceiling(XmlConvert.ToTimeSpan(this.ContentDetails.Duration).TotalSeconds)
+            , Duration = VideosService.ConvertDurationToTotalSeconds(this.ContentDetails.Duration)
             , PublishedAt = this.Snippet.PublishedAt
         };
 
@@ -27,5 +26,4 @@ namespace DesafioBack.Contracts.Responses
             return videosReponse.Select(v => v.toEntity()).ToList();
         }
     }
-
 }

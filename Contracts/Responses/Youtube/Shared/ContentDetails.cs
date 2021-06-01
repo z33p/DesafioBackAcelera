@@ -1,4 +1,4 @@
-namespace DesafioBack.Contracts.Responses.Shared
+namespace DesafioBack.Contracts.Responses.Youtube.Shared
 {
     public class ContentDetails
     {

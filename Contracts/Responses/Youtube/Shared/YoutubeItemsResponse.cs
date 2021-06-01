@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DesafioBack.Contracts.Responses.Shared
+namespace DesafioBack.Contracts.Responses.Youtube.Shared
 {
     public class YoutubeItemsResponse<T>
     {

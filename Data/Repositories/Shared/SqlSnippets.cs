@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DesafioBack.Data.Repositories.shared;
 
 namespace DesafioBack.Data.Repositories.Shared
 {
@@ -55,9 +56,30 @@ namespace DesafioBack.Data.Repositories.Shared
             return "*";
         }
 
-        public string WhereColumnEquals(String columnName, dynamic value)
+        public string WhereColumn(String columnName, dynamic value, ComparationSymbol symbolEnum = ComparationSymbol.EQUAL)
         {
-            var where = $"{columnName} = {AddQuotesIfNotNumeric(value)}";
+            string comparationSymbol;
+
+            switch (symbolEnum)
+            {
+                case ComparationSymbol.EQUAL:
+                    comparationSymbol = "=";
+                    break;
+                case ComparationSymbol.GREATER_THAN:
+                    comparationSymbol = ">";
+                    break;
+                default:
+                    throw new Exception("Comparation symbol isn't in switch case statement");
+            }
+
+            var where = $"{columnName} {comparationSymbol} {AddQuotesIfNotNumeric(value)}";
+
+            return where;
+        }
+
+        public string WhereColumnContains(string columnName, string value)
+        {
+            var where = $"{columnName} LIKE '%_{value}_%'";
 
             return where;
         }

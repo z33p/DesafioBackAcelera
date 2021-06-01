@@ -1,7 +1,9 @@
 using DesafioBack;
 using DesafioBack.Contracts;
+using DesafioBack.Data;
 using DesafioBack.Data.Repositories;
 using DesafioBack.Data.Repositories.shared;
+using DesafioBack.Data.Shared;
 using DesafioBack.Services;
 using DesafioBack.Services.Videos;
 using Microsoft.AspNetCore.Builder;
@@ -31,7 +33,11 @@ namespace DesafioBackAcelera
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DesafioBackAcelera", Version = "v1" });
             });
 
+            services.AddSingleton<IMyDatabase, MyDatabase>();
             services.AddSingleton<IRepository, Repository>();
+        
+            services.AddSingleton<ISqlSnippets, SqlSnippets>();
+
             services.AddSingleton<IVideosService, VideosService>();
         }
 

@@ -30,5 +30,10 @@ namespace DesafioBack.Services
 
             return (int) Math.Ceiling(XmlConvert.ToTimeSpan(duration).TotalSeconds);
         }
+
+        public async Task<string> CreateVideo(Video video)
+        {
+            return await repository.Insert<Video>(video);
+        }
     }
 }

@@ -2,22 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DesafioBack.Data.Repositories.shared;
+using DesafioBack.Data.Shared;
 
-namespace DesafioBack.Data.Repositories.Shared
+namespace DesafioBack.Data
 {
-    public class SqlSnippets
+    public class SqlSnippets : ISqlSnippets
     {
-        private static SqlSnippets _instance = new SqlSnippets();
-        public static SqlSnippets Instance { get => _instance; }
+        public string Insert(string tableName, Dictionary<string, dynamic> entity)
+        {
+            var values = GetValueColumnsFromEntity(entity);
 
-        public string InsertMultiple(string tableName, List<Dictionary<string, dynamic>> entities)
+            var sql = $@"
+                INSERT INTO {tableName} ({string.Join(",", entity.Keys)})
+                VALUES {values}
+            ";
+
+            return sql;
+        }
+
+        public string Insert(string tableName, List<Dictionary<string, dynamic>> entities)
         {
             if (entities == null || !entities.Any())
                 throw new ArgumentException($"[entities] is null or empty");
 
             var firstEntity = entities.First();
 
-            var values = string.Join("," , entities.Select(entity => $"({string.Join(",", entity.Values.Select(AddQuotesIfNotNumeric))})"));
+            var values = string.Join("," , entities.Select(entity => GetValueColumnsFromEntity(entity)));
 
             var sql = $@"
                 INSERT INTO {tableName} ({string.Join(",", firstEntity.Keys)})
@@ -26,6 +36,13 @@ namespace DesafioBack.Data.Repositories.Shared
             
             return sql;
         }
+
+        private string GetValueColumnsFromEntity(Dictionary<string, dynamic> entity)
+        {
+            return $"({string.Join(",", entity.Values.Select(AddQuotesIfNotNumeric))})";
+        }
+
+
 
         private string AddQuotesIfNotNumeric(dynamic value)
         {

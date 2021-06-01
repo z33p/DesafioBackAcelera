@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DesafioBack.Data.Repositories.Shared;
+using DesafioBack.Data.Shared;
 using DesafioBack.Models.Tables;
 using DesafioBack.Services.Shared;
 
@@ -8,6 +8,14 @@ namespace DesafioBack.Services.Videos.Filters
 {
     public class VideoFilterQueryBuilder : IFilterQueryBuilder
     {
+
+        private readonly ISqlSnippets _sqlSnippets;
+
+        public VideoFilterQueryBuilder(ISqlSnippets sqlSnippets)
+        {
+            _sqlSnippets = sqlSnippets;
+        }
+
         public string Id { get; private set; }
         public VideoFilterQueryBuilder SetId(string id)
         {
@@ -89,34 +97,33 @@ namespace DesafioBack.Services.Videos.Filters
             var wheresList = new List<string>();
 
             if (!string.IsNullOrWhiteSpace(this.Id))
-                wheresList.Add(SqlSnippets.Instance.WhereColumn(VideoTable.IdColumn, this.Id));
+                wheresList.Add(_sqlSnippets.WhereColumn(VideoTable.IdColumn, this.Id));
             
             if (!string.IsNullOrWhiteSpace(this.Title))
-                wheresList.Add(SqlSnippets.Instance.WhereColumnContains(VideoTable.TitleColumn, this.Title));
+                wheresList.Add(_sqlSnippets.WhereColumnContains(VideoTable.TitleColumn, this.Title));
             
             if (!string.IsNullOrWhiteSpace(this.Author))
-                wheresList.Add(SqlSnippets.Instance.WhereColumnContains(VideoTable.AuthorColumn, this.Author));
+                wheresList.Add(_sqlSnippets.WhereColumnContains(VideoTable.AuthorColumn, this.Author));
             
             if (this.Duration != null)
-                wheresList.Add(SqlSnippets.Instance.WhereColumn(VideoTable.DurationColumn, this.Duration));
+                wheresList.Add(_sqlSnippets.WhereColumn(VideoTable.DurationColumn, this.Duration));
             
             if (this.PublishedAt != null)
-                wheresList.Add(SqlSnippets.Instance.WhereColumn(VideoTable.PublishedAtColumn, this.PublishedAt));
+                wheresList.Add(_sqlSnippets.WhereColumn(VideoTable.PublishedAtColumn, this.PublishedAt));
             else if (this.PublishedAfter != null)
                 wheresList.Add(
-                    SqlSnippets.Instance.WhereColumn(
+                    _sqlSnippets.WhereColumn(
                         VideoTable.PublishedAtColumn
                         , this.PublishedAfter
                         , Data.Repositories.shared.ComparationSymbol.GREATER_THAN
                     )
                 );
 
-
-            var columnsSql = SqlSnippets.Instance.ColumnsSql(this.Columns);
+            var columnsSql = _sqlSnippets.ColumnsSql(this.Columns);
  
-            var wheresSql = SqlSnippets.Instance.WheresSql(wheresList);
+            var wheresSql = _sqlSnippets.WheresSql(wheresList);
  
-            var orderBySql = SqlSnippets.Instance.OrderBySql(this.OrderBy);
+            var orderBySql = _sqlSnippets.OrderBySql(this.OrderBy);
 
             var baseQuery = $@"
                 SELECT

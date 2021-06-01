@@ -1,18 +1,34 @@
 using System;
+using DesafioBack.Data.Shared;
 using DesafioBack.Services.Videos.Filters;
+using Microsoft.AspNetCore.Mvc;
 
-namespace DesafioBack.Contracts.Requests
+namespace DesafioBack.Contracts.Requests.Videos
 {
     public class GetVideosRequest
     {
+        private readonly ISqlSnippets _sqlSnippets;
+
+        public GetVideosRequest(ISqlSnippets sqlSnippets)
+        {
+            _sqlSnippets = sqlSnippets;
+        }
+
+        [FromRoute]
         public string Title { get; set; }
+
+        [FromRoute]
         public string Author { get; set; }
+
+        [FromRoute]
         public string Duration { get; set; }
+
+        [FromRoute]
         public DateTime? PublishedAfter { get; set; }
 
         public VideoFilterQueryBuilder ToQueryBuilder()
         {
-            var filterBuilder = new VideoFilterQueryBuilder()
+            var filterBuilder = new VideoFilterQueryBuilder(_sqlSnippets)
                 .SetTitle(this.Title)
                 .SetAuthor(this.Author);
 

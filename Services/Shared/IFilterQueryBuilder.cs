@@ -5,9 +5,6 @@ namespace DesafioBack.Services.Shared
 {
     public interface IFilterQueryBuilder
     {
-        string Id { get; }
-        VideoFilterQueryBuilder SetId(string id);
-
         List<string> Columns { get; }
         VideoFilterQueryBuilder SetColumns(List<string> columns);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DesafioBack.Contracts.Responses.Shared;
 using DesafioBack.Models;
+using DesafioBack.Services;
 
 namespace DesafioBack.Contracts.Responses.Videos.Shared
 {
@@ -10,14 +11,14 @@ namespace DesafioBack.Contracts.Responses.Videos.Shared
     {
         public string Title { get; set; }
         public string Author { get; set; }
-        public int Duration { get; set; }
+        public string Duration { get; set; }
         public DateTime PublishedAt { get; set; }
 
         public static VideoResponse FromEntity(Video video) => new VideoResponse
         {
             Title = video.Title
             , Author = video.Author
-            , Duration = video.Duration
+            , Duration = VideosService.ConvertTicksToDuration(video.Duration)
             , PublishedAt = video.PublishedAt
         };
 

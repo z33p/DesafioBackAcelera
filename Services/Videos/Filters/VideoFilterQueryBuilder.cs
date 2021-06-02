@@ -16,13 +16,6 @@ namespace DesafioBack.Services.Videos.Filters
             _sqlSnippets = sqlSnippets;
         }
 
-        public string Id { get; private set; }
-        public VideoFilterQueryBuilder SetId(string id)
-        {
-            this.Id = id;
-            return this;
-        }
-
         public string Title { get; private set; }
         public VideoFilterQueryBuilder SetTitle(string title)
         {
@@ -37,8 +30,8 @@ namespace DesafioBack.Services.Videos.Filters
             return this;
         }
 
-        public int? Duration { get; private set; }
-        public VideoFilterQueryBuilder SetDuration(int duration)
+        public long? Duration { get; private set; }
+        public VideoFilterQueryBuilder SetDuration(long duration)
         {
             this.Duration = duration;
             return this;
@@ -46,7 +39,7 @@ namespace DesafioBack.Services.Videos.Filters
 
         public VideoFilterQueryBuilder SetDuration(string duration)
         {
-            this.Duration = VideosService.ConvertDurationToTotalSeconds(duration);
+            this.Duration = VideosService.ConvertDurationToTicks(duration);
             return this;
         }
 
@@ -96,9 +89,6 @@ namespace DesafioBack.Services.Videos.Filters
         {
             var wheresList = new List<string>();
 
-            if (!string.IsNullOrWhiteSpace(this.Id))
-                wheresList.Add(_sqlSnippets.WhereColumn(VideoTable.IdColumn, this.Id));
-            
             if (!string.IsNullOrWhiteSpace(this.Title))
                 wheresList.Add(_sqlSnippets.WhereColumnContains(VideoTable.TitleColumn, this.Title));
             

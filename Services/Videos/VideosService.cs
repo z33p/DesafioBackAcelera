@@ -23,15 +23,20 @@ namespace DesafioBack.Services
             return videos;
         }
 
-        public static int ConvertDurationToTotalSeconds(string duration)
+        public static string ConvertTicksToDuration(long duration)
+        {
+            return XmlConvert.ToString(new TimeSpan(duration));
+        }
+
+        public static long ConvertDurationToTicks(string duration)
         {
             if (string.IsNullOrWhiteSpace(duration))
                 throw new Exception("The duration can't be null or whitespace");
 
-            return (int) Math.Ceiling(XmlConvert.ToTimeSpan(duration).TotalSeconds);
+            return XmlConvert.ToTimeSpan(duration).Ticks;
         }
 
-        public async Task<string> CreateVideo(Video video)
+        public async Task<long> CreateVideo(Video video)
         {
             return await repository.Insert<Video>(video);
         }

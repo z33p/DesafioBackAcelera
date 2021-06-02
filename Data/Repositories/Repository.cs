@@ -5,31 +5,32 @@ using System.Threading.Tasks;
 using DesafioBack.Data.Repositories.shared;
 using DesafioBack.Data.Shared;
 using DesafioBack.Models.Shared;
-using Microsoft.Extensions.Logging;
 
 namespace DesafioBack.Data.Repositories
 {
     public class Repository : IRepository
     {
-        private readonly ILogger<Repository> _logger;
         private readonly IMyDatabase _database;
         private readonly ISqlSnippets _sqlSnippets;
 
-        public Repository(ILogger<Repository> logger, IMyDatabase database, ISqlSnippets sqlSnippets)
+        public Repository(IMyDatabase database, ISqlSnippets sqlSnippets)
         {
-            _logger = logger;
             _database = database;
             _sqlSnippets = sqlSnippets;
         }
 
-        public async Task<string> Insert<E>(E entity) where E : IEntity<E>
+        public async Task<long> Insert<E>(E entity) where E : IEntity<E>
         {
             var sql = _sqlSnippets.Insert(
                 entity.DbTable.TableName
                 , entity.DbTable.EntityMapToDatabase(entity)
             );
 
-            var entityId = (string) await _database.ExecuteScalarAsync(sql);
+            sql += $@"
+                {_sqlSnippets.GetLastInsertedRowId()}
+            ";
+
+            var entityId = (long) await _database.ExecuteScalarAsync(sql);
 
             return entityId;
         }

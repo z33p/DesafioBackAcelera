@@ -15,7 +15,8 @@ namespace DesafioBack.Models.Tables
 
         public string TableName { get; set; } = "videos";
 
-        public const string IdColumn = "video_id";
+        public const string IdColumn = "id";
+        public const string VideoIdColumn = "video_id";
         public const string TitleColumn = "title";
         public const string AuthorColumn = "author";
         public const string DurationColumn = "duration";
@@ -30,9 +31,11 @@ namespace DesafioBack.Models.Tables
                 DROP TABLE IF EXISTS {TableName};
 
                 CREATE TABLE IF NOT EXISTS {TableName} (
-                    {IdColumn} TEXT PRIMARY KEY
+                    {IdColumn} INTEGER PRIMARY KEY AUTOINCREMENT
+                    , {VideoIdColumn} TEXT
                     , {TitleColumn} TEXT
                     , {AuthorColumn} TEXT
+                    , {DurationColumn} INTEGER
                     , {PublishedAtColumn} TEXT
                 );
             ";
@@ -42,9 +45,10 @@ namespace DesafioBack.Models.Tables
 
         public Dictionary<string, dynamic> EntityMapToDatabase(Video video) => new Dictionary<string, dynamic>
         {
-            [IdColumn] = video.VideoId
-            , [TitleColumn] = video.Title
-            , [AuthorColumn] = video.Author
+            [VideoIdColumn] = video.VideoId ?? ""
+            , [TitleColumn] = video.Title ?? ""
+            , [AuthorColumn] = video.Author ?? ""
+            , [DurationColumn] = video.Duration
             , [PublishedAtColumn] = video.PublishedAt
         };
 
@@ -58,7 +62,10 @@ namespace DesafioBack.Models.Tables
             var video = new Video();
 
             if (dict.ContainsKey(IdColumn))
-                video.VideoId = dict[IdColumn];
+                video.Id = dict[IdColumn];
+
+            if (dict.ContainsKey(VideoIdColumn))
+                video.VideoId = dict[VideoIdColumn];
 
             if (dict.ContainsKey(TitleColumn))
                 video.Title = dict[TitleColumn];

@@ -12,5 +12,6 @@ namespace DesafioBack.Data.Shared
         string WhereColumn(string columnName, dynamic value, ComparationSymbol symbolEnum = ComparationSymbol.EQUAL);
         string WhereColumnContains(string columnName, string value);
         string WheresSql(List<string> sqlWheresList);
+        string GetLastInsertedRowId();
     }
 }

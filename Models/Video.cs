@@ -9,12 +9,14 @@ namespace DesafioBack.Models
     {
         public IDbTable<Video> DbTable => VideoTable.Instance;
 
+        public long Id { get; set; }
+        
         public string VideoId { get; set; }
 
         public string Title { get; set; }
         public string Author { get; set; }
 
-        public int Duration { get; set; }
+        public long Duration { get; set; }
         public DateTime PublishedAt { get; set; }
 
     }

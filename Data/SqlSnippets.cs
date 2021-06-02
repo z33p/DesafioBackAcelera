@@ -14,7 +14,7 @@ namespace DesafioBack.Data
 
             var sql = $@"
                 INSERT INTO {tableName} ({string.Join(",", entity.Keys)})
-                VALUES {values}
+                VALUES {values};
             ";
 
             return sql;
@@ -31,7 +31,7 @@ namespace DesafioBack.Data
 
             var sql = $@"
                 INSERT INTO {tableName} ({string.Join(",", firstEntity.Keys)})
-                VALUES {values}
+                VALUES {values};
             ";
             
             return sql;
@@ -42,14 +42,12 @@ namespace DesafioBack.Data
             return $"({string.Join(",", entity.Values.Select(AddQuotesIfNotNumeric))})";
         }
 
-
-
         private string AddQuotesIfNotNumeric(dynamic value)
         {
             double _;
             var isNumeric = double.TryParse(value.ToString(), out _);
 
-            if (isNumeric) return value.toString();
+            if (isNumeric) return $"{value}";
 
             return $"'{value}'";
         }
@@ -112,6 +110,11 @@ namespace DesafioBack.Data
             if (offset != null) orderBy += " OFFSET $offset";
 
             return orderBy;
+        }
+
+        public string GetLastInsertedRowId()
+        {
+            return "SELECT last_insert_rowid();";
         }
     }
 }

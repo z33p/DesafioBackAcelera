@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using DesafioBack.Contracts.Requests.Videos;
 using DesafioBack.Contracts.Responses.Shared;
+using DesafioBack.Contracts.Responses.Videos;
 using DesafioBack.Contracts.Responses.Videos.Shared;
 using DesafioBack.Data.Shared;
 using DesafioBack.Services.Videos;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +27,7 @@ namespace DesafioBackAcelera.Controllers
             _sqlSnippets = sqlSnippets;
         }
 
-        public async Task<PayloadResponse<VideoResponse>> GetVideos(string title, string author, string duration, DateTime? publishedAfter)
+        public async Task<ActionResult> GetVideos(string title, string author, string duration, DateTime? publishedAfter)
         {
             var req = new GetVideosRequest(_sqlSnippets)
             {
@@ -39,7 +41,17 @@ namespace DesafioBackAcelera.Controllers
 
             var response = VideoResponse.FromEntity(videos);
 
-            return new PayloadResponse<VideoResponse>(response);
+            return Ok(new PayloadResponse<VideoResponse>(response));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateVideo([FromBody] CreateVideoRequest createVideoRequest)
+        {
+            var video = createVideoRequest.ToEntity();
+
+            video.Id = await _videosService.CreateVideo(video);
+
+            return new ObjectResult(new CreateVideoResponse(video.Id)) { StatusCode = StatusCodes.Status201Created };
         }
     }
 }

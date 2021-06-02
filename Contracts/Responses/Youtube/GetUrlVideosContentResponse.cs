@@ -17,7 +17,7 @@ namespace DesafioBack.Contracts.Responses.Youtube
             VideoId = this.Id
             , Title = this.Snippet.Title
             , Author = this.Snippet.ChannelTitle
-            , Duration = VideosService.ConvertDurationToTotalSeconds(this.ContentDetails.Duration)
+            , Duration = VideosService.ConvertDurationToTicks(this.ContentDetails.Duration)
             , PublishedAt = this.Snippet.PublishedAt
         };
 

@@ -9,6 +9,7 @@ namespace DesafioBack.Contracts.Responses.Videos.Shared
 {
     public class VideoResponse : IResponse
     {
+        public long Id { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
         public string Duration { get; set; }
@@ -16,7 +17,8 @@ namespace DesafioBack.Contracts.Responses.Videos.Shared
 
         public static VideoResponse FromEntity(Video video) => new VideoResponse
         {
-            Title = video.Title
+            Id = video.Id
+            , Title = video.Title
             , Author = video.Author
             , Duration = VideosService.ConvertTicksToDuration(video.Duration)
             , PublishedAt = video.PublishedAt

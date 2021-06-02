@@ -53,5 +53,15 @@ namespace DesafioBackAcelera.Controllers
 
             return new ObjectResult(new CreateVideoResponse(video.Id)) { StatusCode = StatusCodes.Status201Created };
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateVideo([FromBody] UpdateVideoRequest UpdateVideoRequest)
+        {
+            var video = UpdateVideoRequest.ToEntity();
+
+            await _videosService.UpdateVideo(video);
+
+            return NoContent();
+        }
     }
 }

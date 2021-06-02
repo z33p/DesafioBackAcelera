@@ -40,5 +40,10 @@ namespace DesafioBack.Services
         {
             return await repository.Insert<Video>(video);
         }
+
+        public async Task UpdateVideo(Video video)
+        {
+            await repository.Update(video);
+        }
     }
 }

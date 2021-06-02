@@ -15,7 +15,8 @@ namespace DesafioBack.Models.Tables
 
         public string TableName { get; set; } = "videos";
 
-        public const string IdColumn = "id";
+        public string IdColumn => "id";
+
         public const string VideoIdColumn = "video_id";
         public const string TitleColumn = "title";
         public const string AuthorColumn = "author";
@@ -41,6 +42,15 @@ namespace DesafioBack.Models.Tables
             ";
 
             await command.ExecuteNonQueryAsync();
+        }
+
+        public Dictionary<string, dynamic> EntityMapToDatabaseIncludeId(Video video)
+        {
+            var videoDict = EntityMapToDatabase(video);
+
+            videoDict.Add(IdColumn, video.Id);
+
+            return videoDict;
         }
 
         public Dictionary<string, dynamic> EntityMapToDatabase(Video video) => new Dictionary<string, dynamic>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DesafioBack.Data.Repositories.shared;
 using DesafioBack.Data.Shared;
+using DesafioBack.Models;
 using DesafioBack.Models.Shared;
 
 namespace DesafioBack.Data.Repositories
@@ -21,10 +22,7 @@ namespace DesafioBack.Data.Repositories
 
         public async Task<long> Insert<E>(E entity) where E : IEntity<E>
         {
-            var sql = _sqlSnippets.Insert(
-                entity.DbTable.TableName
-                , entity.DbTable.EntityMapToDatabase(entity)
-            );
+            var sql = _sqlSnippets.Insert(entity);
 
             sql += $@"
                 {_sqlSnippets.GetLastInsertedRowId()}
@@ -42,10 +40,7 @@ namespace DesafioBack.Data.Repositories
 
             var firstEntity = entities.First();
 
-            var sql = _sqlSnippets.Insert(
-                firstEntity.DbTable.TableName
-                , firstEntity.DbTable.EntityMapToDatabase(entities)
-            );
+            var sql = _sqlSnippets.Insert(entities);
 
             await _database.ExecuteNonQueryAsync(sql);
         }
@@ -57,6 +52,13 @@ namespace DesafioBack.Data.Repositories
             var entities = new E().DbTable.EntityMapFromDatabase(dictList);
 
                 return entities;
+        }
+
+        public async Task Update<E>(E entity) where E : IEntity<E>
+        {
+            var sql = _sqlSnippets.Update(entity);
+
+            await _database.ExecuteNonQueryAsync(sql);
         }
     }
 }

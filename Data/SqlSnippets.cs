@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using DesafioBack.Data.Repositories.shared;
 using DesafioBack.Data.Shared;
+using DesafioBack.Models.Shared;
 
 namespace DesafioBack.Data
 {
     public class SqlSnippets : ISqlSnippets
     {
-        public string Insert(string tableName, Dictionary<string, dynamic> entity)
+        public string Insert<E>(E entity) where E : IEntity<E>
         {
-            var values = GetValueColumnsFromEntity(entity);
+            var entityDict = entity.DbTable.EntityMapToDatabase(entity);
+
+            var values = GetValueColumnsFromEntity(entityDict);
 
             var sql = $@"
-                INSERT INTO {tableName} ({string.Join(",", entity.Keys)})
+                INSERT INTO {entity.DbTable.TableName} ({string.Join(",", entityDict.Keys)})
                 VALUES {values};
             ";
 
             return sql;
         }
 
-        public string Insert(string tableName, List<Dictionary<string, dynamic>> entities)
+        public string Insert<E>(List<E> entities) where E : IEntity<E>
         {
             if (entities == null || !entities.Any())
                 throw new ArgumentException($"[entities] is null or empty");
@@ -29,8 +32,11 @@ namespace DesafioBack.Data
 
             var values = string.Join("," , entities.Select(entity => GetValueColumnsFromEntity(entity)));
 
+
             var sql = $@"
-                INSERT INTO {tableName} ({string.Join(",", firstEntity.Keys)})
+                INSERT INTO {firstEntity.DbTable.TableName} (
+                    {string.Join(",", firstEntity.DbTable.EntityMapToDatabase(firstEntity).Keys)}
+                )
                 VALUES {values};
             ";
             
@@ -40,6 +46,12 @@ namespace DesafioBack.Data
         private string GetValueColumnsFromEntity(Dictionary<string, dynamic> entity)
         {
             return $"({string.Join(",", entity.Values.Select(AddQuotesIfNotNumeric))})";
+        }
+
+        private string GetValueColumnsFromEntity<E>(E entity) where E : IEntity<E>
+        {
+            var entityDict = entity.DbTable.EntityMapToDatabase(entity);
+            return $"({string.Join(",", entityDict.Values.Select(AddQuotesIfNotNumeric))})";
         }
 
         private string AddQuotesIfNotNumeric(dynamic value)
@@ -52,7 +64,8 @@ namespace DesafioBack.Data
             return $"'{value}'";
         }
 
-        public string WheresSql(List<string> sqlWheresList) {
+        public string WheresSql(List<string> sqlWheresList)
+        {
             var sqlWheres = "";
 
             sqlWheresList = sqlWheresList.Where(where => !string.IsNullOrEmpty(where)).ToList();
@@ -115,6 +128,25 @@ namespace DesafioBack.Data
         public string GetLastInsertedRowId()
         {
             return "SELECT last_insert_rowid();";
+        }
+
+        public string Update<E>(E entity) where E : IEntity<E>
+        {
+            var entityDict = entity.DbTable.EntityMapToDatabaseIncludeId(entity);
+
+            var idColumn = entity.DbTable.IdColumn;
+            var setColumns = string.Join(
+                "\n, "
+                , entityDict.Where(e => e.Key != idColumn).Select(e => $"{e.Key} = {AddQuotesIfNotNumeric(e.Value)}")
+            );
+
+            var sql = $@"
+                UPDATE {entity.DbTable.TableName}
+                SET {setColumns}
+                WHERE {idColumn} = {entityDict[idColumn]}
+            ";
+
+            return sql;
         }
     }
 }

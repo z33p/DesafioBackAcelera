@@ -9,5 +9,6 @@ namespace DesafioBack.Data.Repositories.shared
         Task<List<E>> FindByQuery<E>(string rawQuery) where E : IEntity<E>, new();
         Task<long> Insert<E>(E entity) where E : IEntity<E>;
         Task Insert<E>(List<E> entities) where E : IEntity<E>;
+        Task Update<E>(E entity) where E : IEntity<E>;
     }
 }

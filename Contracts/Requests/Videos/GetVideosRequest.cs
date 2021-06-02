@@ -14,16 +14,9 @@ namespace DesafioBack.Contracts.Requests.Videos
             _sqlSnippets = sqlSnippets;
         }
 
-        [FromRoute]
         public string Title { get; set; }
-
-        [FromRoute]
         public string Author { get; set; }
-
-        [FromRoute]
         public string Duration { get; set; }
-
-        [FromRoute]
         public DateTime? PublishedAfter { get; set; }
 
         public VideoFilterQueryBuilder ToQueryBuilder()

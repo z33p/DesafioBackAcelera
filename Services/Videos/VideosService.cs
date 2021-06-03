@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using DesafioBack.Data.Repositories.shared;
 using DesafioBack.Models;
+using DesafioBack.Models.Tables;
 using DesafioBack.Services.Shared;
 using DesafioBack.Services.Videos;
 using DesafioBack.Services.Videos.Filters;
@@ -44,6 +45,16 @@ namespace DesafioBack.Services
         public async Task UpdateVideo(Video video)
         {
             await repository.Update(video);
+        }
+
+        public async Task DeleteVideo(long id)
+        {
+            var columns = new Dictionary<string, dynamic>
+            {
+                [VideoTable.DeletedColumn] = true
+            };
+
+            await repository.UpdateWherePkEquals(id, VideoTable.Instance, columns);
         }
     }
 }

@@ -10,5 +10,6 @@ namespace DesafioBack.Services.Videos
         Task<List<Video>> GetVideos(VideoFilterQueryBuilder filterBuilder);
         Task<long> CreateVideo(Video video);
         Task UpdateVideo(Video video);
+        Task DeleteVideo(long id);
     }
 }

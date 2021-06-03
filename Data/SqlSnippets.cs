@@ -45,17 +45,19 @@ namespace DesafioBack.Data
 
         private string GetValueColumnsFromEntity(Dictionary<string, dynamic> entity)
         {
-            return $"({string.Join(",", entity.Values.Select(AddQuotesIfNotNumeric))})";
+            return $"({string.Join(",", entity.Values.Select(AddQuotesIfNotNumericOrConvertIfBool))})";
         }
 
         private string GetValueColumnsFromEntity<E>(E entity) where E : IEntity<E>
         {
             var entityDict = entity.DbTable.EntityMapToDatabase(entity);
-            return $"({string.Join(",", entityDict.Values.Select(AddQuotesIfNotNumeric))})";
+            return $"({string.Join(",", entityDict.Values.Select(AddQuotesIfNotNumericOrConvertIfBool))})";
         }
 
-        private string AddQuotesIfNotNumeric(dynamic value)
+        private string AddQuotesIfNotNumericOrConvertIfBool(dynamic value)
         {
+            if (value is bool?) return (value == true ? 1 : 0).ToString();
+
             double _;
             var isNumeric = double.TryParse(value.ToString(), out _);
 
@@ -100,7 +102,7 @@ namespace DesafioBack.Data
                     throw new Exception("Comparation symbol isn't in switch case statement");
             }
 
-            var where = $"{columnName} {comparationSymbol} {AddQuotesIfNotNumeric(value)}";
+            var where = $"{columnName} {comparationSymbol} {AddQuotesIfNotNumericOrConvertIfBool(value)}";
 
             return where;
         }
@@ -135,10 +137,7 @@ namespace DesafioBack.Data
             var entityDict = entity.DbTable.EntityMapToDatabaseIncludeId(entity);
 
             var idColumn = entity.DbTable.IdColumn;
-            var setColumns = string.Join(
-                "\n, "
-                , entityDict.Where(e => e.Key != idColumn).Select(e => $"{e.Key} = {AddQuotesIfNotNumeric(e.Value)}")
-            );
+            var setColumns = GetSqlSetColumnsOnUpdate(entityDict);
 
             var sql = $@"
                 UPDATE {entity.DbTable.TableName}
@@ -147,6 +146,23 @@ namespace DesafioBack.Data
             ";
 
             return sql;
+        }
+
+        public string Update(string tableName,  Dictionary<string, dynamic> entity, string where)
+        {
+            var setColumns = GetSqlSetColumnsOnUpdate(entity);
+
+            var sql = $"UPDATE {tableName} SET {setColumns} WHERE {where}";
+
+            return sql;
+        }
+
+        private string GetSqlSetColumnsOnUpdate(Dictionary<string, dynamic> entity)
+        {
+            return string.Join(
+                "\n, "
+                , entity.Select(e => $"{e.Key} = {AddQuotesIfNotNumericOrConvertIfBool(e.Value)}")
+            );
         }
     }
 }

@@ -61,6 +61,14 @@ namespace DesafioBackAcelera.Controllers
 
             await _videosService.UpdateVideo(video);
 
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteVideo(long id)
+        {
+            await _videosService.DeleteVideo(id);
+
             return NoContent();
         }
     }

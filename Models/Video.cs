@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using DesafioBack.Models.Shared;
 using DesafioBack.Models.Tables;
 
@@ -19,5 +18,6 @@ namespace DesafioBack.Models
         public long Duration { get; set; }
         public DateTime PublishedAt { get; set; }
 
+        public bool Deleted { get; set; } = false;
     }
 }

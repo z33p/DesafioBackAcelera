@@ -16,5 +16,6 @@ namespace DesafioBack.Data.Shared
         string WheresSql(List<string> sqlWheresList);
         string GetLastInsertedRowId();
         string Update<E>(E entity) where E : IEntity<E>;
+        string Update(string tableName, Dictionary<string, dynamic> entity, string where);
     }
 }

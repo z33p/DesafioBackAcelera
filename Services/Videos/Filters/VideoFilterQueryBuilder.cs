@@ -57,6 +57,13 @@ namespace DesafioBack.Services.Videos.Filters
             return this;
         }
 
+        public bool? Deleted { get; private set; } = false;
+        public VideoFilterQueryBuilder SetDeleted(bool? deleted)
+        {
+            this.Deleted = deleted;
+            return this;
+        }
+
         public List<string> Columns { get; private set; }
         public VideoFilterQueryBuilder SetColumns(List<string> columns)
         {
@@ -108,6 +115,9 @@ namespace DesafioBack.Services.Videos.Filters
                         , Data.Repositories.shared.ComparationSymbol.GREATER_THAN
                     )
                 );
+
+            if (this.Deleted.HasValue)
+                wheresList.Add(_sqlSnippets.WhereColumn(VideoTable.DeletedColumn, this.Deleted));
 
             var columnsSql = _sqlSnippets.ColumnsSql(this.Columns);
  

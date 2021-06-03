@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Threading.Tasks;
-using DesafioBack.Data;
 using DesafioBack.Models.Shared;
 
 namespace DesafioBack.Models.Tables
@@ -23,6 +22,7 @@ namespace DesafioBack.Models.Tables
         public const string DurationColumn = "duration";
 
         public const string PublishedAtColumn = "published_at";
+        public const string DeletedColumn = "deleted";
 
         public async Task CreateTable(SQLiteConnection connection)
         {
@@ -38,6 +38,7 @@ namespace DesafioBack.Models.Tables
                     , {AuthorColumn} TEXT
                     , {DurationColumn} INTEGER
                     , {PublishedAtColumn} TEXT
+                    , {DeletedColumn} INTEGER
                 );
             ";
 
@@ -60,6 +61,7 @@ namespace DesafioBack.Models.Tables
             , [AuthorColumn] = video.Author ?? ""
             , [DurationColumn] = video.Duration
             , [PublishedAtColumn] = video.PublishedAt
+            , [DeletedColumn] = video.Deleted
         };
 
         public List<Dictionary<string, dynamic>> EntityMapToDatabase(List<Video> videos)
@@ -88,6 +90,9 @@ namespace DesafioBack.Models.Tables
 
             if (dict.ContainsKey(PublishedAtColumn))
                 video.PublishedAt = DateTime.Parse((string) dict[PublishedAtColumn]);
+
+            if (dict.ContainsKey(DeletedColumn))
+                video.Deleted = dict[DeletedColumn] == 1;
 
             return video;
         }

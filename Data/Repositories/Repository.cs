@@ -60,5 +60,14 @@ namespace DesafioBack.Data.Repositories
 
             await _database.ExecuteNonQueryAsync(sql);
         }
+
+        public async Task UpdateWherePkEquals<E>(long id, IDbTable<E> instance, Dictionary<string, dynamic> entity) where E : IEntity<E>
+        {
+            var where = $"{instance.IdColumn} = {id}";
+
+            var sql = _sqlSnippets.Update(instance.TableName, entity, where);
+
+            await _database.ExecuteNonQueryAsync(sql);
+        }
     }
 }

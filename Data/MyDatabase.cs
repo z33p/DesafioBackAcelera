@@ -24,7 +24,14 @@ namespace DesafioBack.Data
                 await VideoTable.Instance.CreateTable(connection);
             }
 
-            await OnDbInitialized();
+            try
+            {
+                await OnDbInitialized();
+            }
+            catch (Exception)
+            {
+                 File.Delete(DatabasePath);
+            }
         }
 
         public async Task ExecuteNonQueryAsync(string sql)

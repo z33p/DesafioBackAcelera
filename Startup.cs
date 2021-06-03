@@ -1,4 +1,4 @@
-using DesafioBack;
+using DesafioBack.Config;
 using DesafioBack.Contracts;
 using DesafioBack.Data;
 using DesafioBack.Data.Repositories;
@@ -26,12 +26,8 @@ namespace DesafioBackAcelera
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DesafioBackAcelera", Version = "v1" });
-            });
+        {            
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddSingleton<IMyDatabase, MyDatabase>();
             services.AddSingleton<IRepository, Repository>();
@@ -39,6 +35,15 @@ namespace DesafioBackAcelera
             services.AddSingleton<ISqlSnippets, SqlSnippets>();
 
             services.AddSingleton<IVideosService, VideosService>();
+
+            services.AddSingleton<IYoutubeApiRoutes, YoutubeApiRoutes>();
+            services.AddSingleton<IYoutubeApiService, YoutubeApiService>();
+
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DesafioBackAcelera", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

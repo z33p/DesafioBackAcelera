@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using DesafioBack;
+using DesafioBack.Data.Shared;
+using DesafioBack.Services;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace DesafioBackAcelera
 {
@@ -14,8 +11,14 @@ namespace DesafioBackAcelera
     {
         public async static Task Main(string[] args)
         {
-            await MyApp.Init();
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            await host.Services.GetService<IMyDatabase>().InitDatabase(OnDbInitialized: async () =>
+            {
+                await host.Services.GetService<IYoutubeApiService>().SeedDatabase();
+            });
+
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 using System.Threading.Tasks;
 using DesafioBack.Data.Shared;
 using DesafioBack.Models.Tables;
@@ -9,16 +10,21 @@ namespace DesafioBack.Data
 {
     public class MyDatabase : IMyDatabase
     {
-        public const string SqliteConnectionString = "Data Source=Data/database.db";
+        public const string DatabasePath = "Data/database.db";
+        public const string SqliteConnectionString = "Data Source=" + DatabasePath;
         
-        public async Task InitDatabase()
+        public async Task InitDatabase(Func<Task> OnDbInitialized)
         {
+            if (File.Exists(DatabasePath)) return;
+
             using (var connection = new SQLiteConnection(SqliteConnectionString))
             {
                 connection.Open();
 
                 await VideoTable.Instance.CreateTable(connection);
             }
+
+            await OnDbInitialized();
         }
 
         public async Task ExecuteNonQueryAsync(string sql)

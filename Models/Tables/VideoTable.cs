@@ -29,8 +29,6 @@ namespace DesafioBack.Models.Tables
             var command = connection.CreateCommand();
 
             command.CommandText = $@"
-                DROP TABLE IF EXISTS {TableName};
-
                 CREATE TABLE IF NOT EXISTS {TableName} (
                     {IdColumn} INTEGER PRIMARY KEY AUTOINCREMENT
                     , {VideoIdColumn} TEXT

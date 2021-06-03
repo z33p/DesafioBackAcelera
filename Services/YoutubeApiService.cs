@@ -12,17 +12,22 @@ using DesafioBack.Services.Shared;
 
 namespace DesafioBack.Services
 {
-    public class YoutubeApiService : ServiceAbstract
+    public class YoutubeApiService : ServiceAbstract, IYoutubeApiService
     {
         public readonly HttpClient client = new HttpClient();
 
-        public YoutubeApiService(IRepository repository) : base(repository) {}
+        private readonly IYoutubeApiRoutes _youtubeApiRoutes;
+
+        public YoutubeApiService(IRepository repository, IYoutubeApiRoutes youtubeApiRoutes) : base(repository)
+        {
+            _youtubeApiRoutes = youtubeApiRoutes;
+        }
 
         public async Task SeedDatabase()
         {
             var videosIds = await GetYoutubeVideosIds();
 
-            var url = YoutubeApiRoutes.GetUrlVideosContent(videosIds);
+            var url = _youtubeApiRoutes.GetUrlVideosContent(videosIds);
 
             var res = await client.GetAsync(url);
 
@@ -37,7 +42,7 @@ namespace DesafioBack.Services
 
         private async Task<List<string>> GetYoutubeVideosIds()
         {
-            var url = YoutubeApiRoutes.GetUrlSearchVideosIds(
+            var url = _youtubeApiRoutes.GetUrlSearchVideosIds(
                 q: "manipulação"
                 , regionCode: "BR"
                 , publishedAfter: new DateTime(2020, 1, 1)

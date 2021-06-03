@@ -31,6 +31,8 @@ namespace DesafioBack.Data
             catch (Exception)
             {
                  File.Delete(DatabasePath);
+
+                 throw new Exception("It was not possible to fetch Youtube API or the api key was invalid");
             }
         }
 

@@ -37,7 +37,12 @@ namespace DesafioBack.Services
 
         private async Task<List<string>> GetYoutubeVideosIds()
         {
-            var url = YoutubeApiRoutes.GetUrlSearchVideosIds(q: "manipulação", regionCode: "BR");
+            var url = YoutubeApiRoutes.GetUrlSearchVideosIds(
+                q: "manipulação"
+                , regionCode: "BR"
+                , publishedAfter: new DateTime(2020, 1, 1)
+                , publishedBefore: new DateTime(2021, 1, 1)
+            );
 
             var res = await client.GetAsync(url);
 

@@ -10,11 +10,13 @@ namespace DesafioBack.Contracts
         public const string SearchBaseUrl = BaseUrl + "/search";
         public const string VideosBaseUrl = BaseUrl + "/videos";
 
-        private const string UrlParameterMaxPerPage = "maxResults=100";
+        private const string UrlParameterMaxPerPage = "maxResults=50";
 
-        public static string GetUrlSearchVideosIds(string q, string regionCode)
+        public static string GetUrlSearchVideosIds(string q, string regionCode, DateTime publishedAfter, DateTime publishedBefore)
         {
-            var url = $"{SearchBaseUrl}?part=Id&q={q}&regionCode={regionCode}&{UrlParameterMaxPerPage}&key={YoutubeApiRoutes.Key}"; 
+            var url = $"{SearchBaseUrl}?part=Id&q={q}&regionCode={regionCode}&{UrlParameterMaxPerPage}"; 
+            url += $"&publishedAfter={publishedAfter.ToString("yyyy-MM-ddTHH:mm:ssZ")}&publishedBefore={publishedBefore.ToString("yyyy-MM-ddTHH:mm:ssZ")}";
+            url += $"&key={YoutubeApiRoutes.Key}";
 
             return url;
         }
